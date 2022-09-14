@@ -1,0 +1,12 @@
+<h1>PROJECTS</h1>
+{{#if projects.length}}
+  <ul>
+    {{#each projects}}
+      <li>
+        {{title}}
+      </li>{{/each}}
+  </ul>
+
+{{else}}
+  <p>Couldn't find any projects</p>
+{{/if}}
