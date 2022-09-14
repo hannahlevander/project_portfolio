@@ -24,4 +24,19 @@ app.get("/projects", function (request, response) {
   response.render("projects.hbs", model);
 });
 
+// GET /projects/1
+// GET /projects/2 etc...
+
+app.get("/projects/:id", function (request, response) {
+  const id = request.params.id;
+
+  const project = data.projects.find((p) => p.id == id);
+
+  const model = {
+    project: project,
+  };
+
+  response.render("project.hbs", model);
+});
+
 app.listen(8080);
