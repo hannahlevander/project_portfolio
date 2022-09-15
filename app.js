@@ -13,7 +13,7 @@ app.engine(
 app.use(express.static("public"));
 
 app.get("/", function (request, response) {
-  response.render("start.hbs");
+  response.render("home.hbs");
 });
 
 app.get("/projects", function (request, response) {
@@ -38,5 +38,34 @@ app.get("/projects/:id", function (request, response) {
 
   response.render("project.hbs", model);
 });
+
+app.get("/about", function (request, response) {
+  response.render("about.hbs");
+});
+
+app.get("/faq", function (request, response) {
+  response.render("faq.hbs");
+});
+
+app.get("/guestbook", function (request, response) {
+  response.render("guestbook.hbs");
+});
+
+app.get("/contact", function (request, response) {
+  response.render("contact.hbs");
+});
+
+// app.get("/static", (req, res) => {
+//   res.render("static");
+// });
+
+// // Route to display dynamic src images
+// app.get("/dynamic", (req, res) => {
+//   imageList = [];
+//   imageList.push({ src: "icons/flask.png", name: "flask" });
+//   imageList.push({ src: "icons/javascript.png", name: "javascript" });
+//   imageList.push({ src: "icons/react.png", name: "react" });
+//   res.render("dynamic", { imageList: imageList });
+// });
 
 app.listen(8080);
