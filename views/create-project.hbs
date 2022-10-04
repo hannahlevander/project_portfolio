@@ -1,0 +1,34 @@
+<h2>Create project</h2>
+
+{{#if errorMessages.length}}
+  <p>Couldn't create the project because</p>
+  <ul>
+    {{#each errorMessages}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if projects.length}}
+  <ul>
+    {{#each projects}}
+      <li><a href="/projects/{{id}}">{{title}}</a></li>
+    {{/each}}
+  </ul>
+
+  {{#else}}
+    <p>There's no projects uploaded yet...</p>
+  {{/else}}
+
+{{/if}}
+
+<form action="/projects/create" method="post">
+  <div>
+    Title:<input type="text" name="title" value="" />
+  </div>
+
+  <div>
+    Description:<input type="text" name="description" value="{{description}}" />
+  </div>
+  <input type="submit" value="Create" />
+</form>

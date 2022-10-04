@@ -1,0 +1,32 @@
+{{#if failedToLogIn}}
+  <p>Failed to log in</p>
+{{/if}}
+
+<form action="/log-in" method="post">
+  <div class="container-log-in">
+    <div class="form-group">
+      <div class="log-in-text-place-in-center">
+        <p>LOG IN</p>
+      </div>
+      <label class="form-label" for="input-example-1">Name</label>
+      <input
+        name="username"
+        class="form-input"
+        type="text"
+        id="input-example-1"
+        placeholder="Name"
+      />
+      <label class="form-label" for="input-example-1">Password</label>
+      <input
+        name="password"
+        class="form-input"
+        type="password"
+        id="input-example-1"
+        placeholder="Password"
+      />
+      <div class="center-and-padding-button">
+        <a href="/log-in/home"><button class="btn btn-primary">Log in</button></a>
+      </div>
+    </div>
+  </div>
+</form>

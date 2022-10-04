@@ -20,25 +20,69 @@
   </head>
   <body>
 
-    <header>
-      HANNAH LEVANDER
-    </header>
-    
- <div class="container"
-    <nav>
-      <a href="/">HOME</a>
-      <a href="/projects">PROJECTS</a>
-      <a href="/about">ABOUT</a>
-      <a href="/faq">FAQ</a>
-      <a href="/guestbook">GUESTBOOK</a>
-      <a href="/contact">CONTACT</a>
-    </nav>
+<div class="title-header">
+  <h2>HANNAH LEVANDER</h2>
 </div>
+  
+<header class="navbar">
+  <section class="navbar-section">
+  </section>
+  <section class="navbar-center">
+        <a href="/" class="text-dark">HOME</a>
+        <a href="/projects" class="text-dark">PROJECTS</a>
+        <a href="/about" class="text-dark">ABOUT</a>
+        <a href="/faq" class="text-dark">FAQ</a>
+        <a href="/guestbook" class="text-dark">GUESTBOOK</a>
+        <a href="/contact" class="text-dark">CONTACT</a>
+        <a href="/log-in" class="text-dark"><i class="icon icon-people"></i></a>
+        {{#if session.isLoggedIn}}
+            <p>You are logged in</p> 
+          {{else}}
+            <p>You are not logged in</p>
+        {{/if}}
+  </section>
+  <section class="navbar-section">
+  </section>
+</header>
+    
+{{!-- 
+    <header class="navbar">
+      <a href="/" class="text-dark"><h2>HANNAH LEVANDER</h2></a>
+      <section class="navbar-section">
+        <a href="/" class="text-dark">HOME</a>
+        <a href="/projects" class="text-dark">PROJECTS</a>
+        <a href="/about" class="text-dark">ABOUT</a>
+        <a href="/faq" class="text-dark">FAQ</a>
+        <a href="/guestbook" class="text-dark">GUESTBOOK</a>
+        <a href="/contact" class="text-dark">CONTACT</a>
+        <a href="log-in" class="text-dark"><i class="icon icon-people"></i></a>
+      </section>
+    </header> --}}
 
+    {{! <header>
+      HANNAH LEVANDER
+    </header> }}
+
+    {{! <div class="container"
+    <nav>
+      <a href="/" class = "text-dark" >HOME</a>
+      <a href="/projects" class = "text-dark" >PROJECTS</a>
+      <a href="/about" class = "text-dark" >ABOUT</a>
+      <a href="/faq" class = "text-dark" >FAQ</a>
+      <a href="/guestbook" class = "text-dark" >GUESTBOOK</a>
+      <a href="/contact" class = "text-dark" >CONTACT</a>
+    </nav>
+</div> }}
+  <main>
     {{{body}}}
+  </main>
 
     <footer>
-      Copyright Hannah Levander 2022
+      <div class="footerContent">
+        <i class="icon icon-location"></i>
+        Jönköping </br> 
+        Copyright Hannah Levander 2022
+      </div>
     </footer>
 
   </body>

@@ -1,0 +1,18 @@
+<ul>
+    <p>hello</p>
+    <div class="faqs-container">
+
+      {{#each faqs}}
+        <div>    
+          <form action="/delete-question/{{id}}" method="POST">
+            <button class="icon icon-delete"></button>
+          </form>
+          <i class="icon icon-edit"></i>
+        </div>
+        
+           <li><p>{{question}}</p>
+      </li>  </div>
+      {{/each}}
+
+    </div>
+  </ul>

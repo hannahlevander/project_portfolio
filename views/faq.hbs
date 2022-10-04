@@ -1,3 +1,74 @@
-<h1>FREQUENTLY ASKED QUESTIONS</h1>
-<h2>How are you?</h2>
-<p>Hello, I'm fine. Thanks for asking!</p>
+<h2>FREQUENTLY ASKED QUESTIONS</h2>
+
+<a href="faq-all-questions.hbs">All questions</a>
+
+{{#if errorMessages.length}}
+  <p>Couldn't create the question because</p>
+  <ul>
+    {{#each errorMessages}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if faqs.length}}
+  <ul>
+    <div class="faqs-container">
+
+      {{#each faqs}}
+        <div>    
+          <form action="/delete-question/{{id}}" method="POST">
+            <button class="icon icon-delete"></button>
+          </form>
+          <i class="icon icon-edit"></i>
+        </div>
+        
+           <li><p>{{question}}</p>
+      </li>  </div>
+      {{/each}}
+
+    </div>
+  </ul>
+
+  {{#else}}
+    <p>Couldn't find any questions</p>
+  {{/else}}
+
+{{/if}}
+
+{{!-- <form action="/faq" method="post">
+  <div>
+    Question:<input type="text" name="question" value="{{question}}" />
+  </div>
+  <input type="submit" value="Create question" />
+</form> --}}
+
+  <form action="/faq" method="POST">
+  <div class="form-group-faq">
+    <div class="form-group">
+      <label class="form-label" for="input-example-3"><h3>DO YOU HAVE ANY QUESTIONS?</h3></label>
+      <textarea
+        class="form-input"
+        id="input-example-3"
+        type="text"
+        name="question"
+        value="{{question}}"
+        placeholder="Write here..."
+        rows="3"
+      ></textarea>
+      <div class="center-and-padding-button">
+      <a href=""><button class="btn btn-primary">Send</button></a>
+  </div>
+</div>
+</form>
+
+{{!-- <form action="/projects/create" method="post">
+  <div>
+    Title:<input type="text" name="title" value="" />
+  </div>
+
+  <div>
+    Description:<input type="text" name="description" value="{{description}}" />
+  </div>
+  <input type="submit" value="Create" />
+</form> --}}
