@@ -416,11 +416,82 @@ app.post("/guestbook", function (request, response) {
 
 app.post("/delete-post/:id", function (request, response) {
   const id = request.params.id;
+
   const query = `DELETE FROM guestbook WHERE id =?`;
 
   db.run(query, id, function (error) {
     response.redirect("/guestbook");
   });
+});
+
+//Answer post
+app.post("/answer-post/:id", function (request, response) {
+  const id = request.params.id;
+  const answer = request.body.answer;
+  const query = `UPDATE guestbook SET answer=? WHERE id=?`;
+  const values = [answer, id];
+
+  db.run(query, values, function (error) {
+    if (error) {
+      errorMessages.push("Internal server error");
+
+      const model = {
+        errorMessages,
+        answer,
+        id,
+      };
+
+      response.render("guestbook.hbs", model);
+    } else {
+      response.redirect("/guestbook");
+    }
+  });
+});
+
+app.post("/guestbook", function (request, response) {
+  const post = request.body.post;
+  const name = request.body.name;
+
+  const errorMessages = [];
+
+  if (post == "") {
+    errorMessages.push("You need to write something");
+  }
+
+  if (name == "") {
+    errorMessages.push("You need to write your name");
+  }
+
+  if (GUESTBOOK_POST_MAX_LENGTH < post.length) {
+    errorMessages.push(
+      "Post can not contain more than " +
+        GUESTBOOK_POST_MAX_LENGTH +
+        " characters"
+    );
+  }
+
+  if (errorMessages.length == 0) {
+    const query = `INSERT INTO guestbook (name, post, date) VALUES (?, ?, date('now'))`;
+    const values = [name, post];
+
+    db.run(query, values, function (error) {
+      if (error) {
+        errorMessages.push("Internal server error");
+
+        const model = {
+          errorMessages,
+          post,
+          name,
+        };
+
+        response.render("guestbook.hbs", model);
+      } else {
+        response.redirect("/guestbook");
+      }
+    });
+  } else {
+    response.render("guestbook.hbs", { errorMessages });
+  }
 });
 
 //Get requests to different pages

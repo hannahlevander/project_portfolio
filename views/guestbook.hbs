@@ -13,14 +13,27 @@
 {{#if guestbook.length}}
   <ul>
       {{#each guestbook}}
-        <div class="guestbook-post">    
-          <form action="/delete-post/{{id}}" method="POST">
-            <button class="icon icon-delete"></button>
-          </form>
-          <i class="icon icon-edit"></i>
+        <div class="guestbook-post">  
             <p>{{date}}</p>
             <p>{{name}}</p>
             <p>{{post}}</p>
+            <p><i>{{answer}}</i></p>
+          {{#if ../session.isLoggedIn}}  
+          <form action="/delete-post/{{id}}" method="POST">
+            <button class="icon icon-delete"></button>
+          </form>
+          <form action="/answer-post/{{id}}" method="POST">
+          <textarea
+        class="form-input"
+        id="input-example-3"
+        name="answer"
+        value="{{answer}}"
+        placeholder="Answer..."
+        rows="3"
+      ></textarea>
+            <button class="btn btn-primary">Answer</button>
+          </form>
+                      {{/if}}
         </div>
       {{/each}}
   </ul>
