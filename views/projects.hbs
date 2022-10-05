@@ -5,17 +5,21 @@
   <ul>
     <div class="projects-container">
 
-      {{#each projects}}
-        <div>    
-          <form action="/delete-project/{{id}}" method="POST">
-          <button class="icon icon-delete"></button>
-          </form>
-          
-          <i class="icon icon-edit"></i>
+      {{#each projects}}  
+         
+          <div> 
+            {{#if ../session.isLoggedIn}}
+            <div>
+            <form action="/delete-project/{{id}}" method="POST">
+              <button class="icon icon-delete"></button>
+            </form>
+            <a href="/update-project/{{id}}" class="icon icon-edit"></a>
+          </div> 
+            {{/if}}
           <a href="/projects/{{id}}">
             {{title}}
-          <img class="projects-image" src={{image}}></img>
-        </div></a>
+          <img class="projects-image" src={{image}}></img></a> 
+        </div>
       {{/each}}
     </div>
   </ul>

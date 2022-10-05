@@ -1,0 +1,21 @@
+<h2>Update project</h2>
+
+{{#if errorMessages.length}}
+  <p>Couldn't update the project because</p>
+  <ul>
+    {{#each errorMessages}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+<form action="/update-project/{{id}}" method="post">
+  <div>
+    Title:<input type="text" name="title" value="{{title}}" />
+  </div>
+
+  <div>
+    Description:<input type="text" name="description" value="{{description}}" />
+  </div>
+  <input type="submit" value="Update" />
+</form>

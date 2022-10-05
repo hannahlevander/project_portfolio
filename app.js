@@ -82,11 +82,6 @@ app.use(function (request, response, next) {
   next();
 });
 
-app.use(function (request, response, next) {
-  response.locals.session = request.session;
-  next();
-});
-
 //Home page
 
 app.get("/", function (request, response) {
@@ -207,6 +202,74 @@ app.post("/delete-project/:id", function (request, response) {
   db.run(query, id, function (error) {
     response.redirect("/projects");
   });
+});
+
+//Update project
+app.get("/update-project/:id", function (request, response) {
+  const id = request.params.id;
+  const model = {
+    id,
+  };
+  response.render("update-project.hbs", model);
+});
+
+app.post("/update-project/:id", function (request, response) {
+  const id = request.params.id;
+  const title = request.body.title;
+  const description = request.body.description;
+
+  const errorMessages = [];
+
+  if (title == "") {
+    errorMessages.push("Title can't be empty");
+  }
+
+  if (PROJECT_TITLE_MAX_LENGTH < title.length) {
+    errorMessages.push(
+      "Title can not contain more than " +
+        PROJECT_TITLE_MAX_LENGTH +
+        " characters"
+    );
+  }
+
+  if (description == "") {
+    errorMessages.push("Description can't be empty");
+  }
+
+  if (PROJECT_DESCRIPTION_MAX_LENGTH < description.length) {
+    errorMessages.push(
+      "Description can not contain more than " +
+        PROJECT_DESCRIPTION_MAX_LENGTH +
+        " characters."
+    );
+  }
+
+  // if (request.session.isLoggedIn != true) {
+  //   errorMessages.push("Not logged in");
+  // }
+
+  if (errorMessages.length == 0) {
+    const query = `UPDATE projects SET title= ?, description= ? WHERE id= ?`;
+    const values = [title, description, id];
+
+    db.run(query, values, function (error) {
+      if (error) {
+        errorMessages.push("Internal server error");
+
+        const model = {
+          errorMessages,
+          title,
+          description,
+        };
+
+        response.render("update-project.hbs", model);
+      } else {
+        response.redirect("/projects");
+      }
+    });
+  } else {
+    response.render("update-project.hbs", { errorMessages });
+  }
 });
 
 //faq page with error messages (look at this code)
