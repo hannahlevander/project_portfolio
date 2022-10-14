@@ -1,5 +1,3 @@
-<h2>Create project</h2>
-
 {{#if errorMessages.length}}
   <p>Couldn't create the project because</p>
   <ul>
@@ -22,13 +20,30 @@
 
 {{/if}}
 
+<div class="items-in-center-container">
 <form action="/projects/create" method="post">
-  <div>
-    Title:<input type="text" name="title" value="" />
-  </div>
-
-  <div>
-    Description:<input type="text" name="description" value="{{description}}" />
-  </div>
-  <input type="submit" value="Create" />
+  <div class="form-create-project">
+    <div class="form-group">
+      <label class="form-label" for="input-example-3"><h3>CREATE PROJECT</h3></label>
+      {{! <label class="form-label" for="input-example-1"></label> }}
+      <input
+        class="form-input"
+        type="text"
+        id="input-example-1"
+        name="title"
+        value=""  
+        placeholder="Title"
+      />
+      <textarea
+        class="form-input"
+        id="input-example-3"
+        name="description"
+        value=""
+        placeholder="Write description..."
+        rows="3"
+      ></textarea>
+      <div class="center-and-padding-button">
+        <a href=""><button class="btn btn-primary">Create</button></a>
+      </div>
 </form>
+</div>

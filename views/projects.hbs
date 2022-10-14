@@ -1,29 +1,30 @@
 <h2>PROJECTS</h2>
-<button class="btn btn-primary"><a class="text-light" href="/projects/create">Create project</a></button>
+{{#if session.isLoggedIn}}
+  <div class="button-padding-bottom ">
+    <button class="btn btn-primary">
+      <a class="text-light" href="/projects/create">Create project</a>
+    </button>
+  </div>
+{{/if}}
 
 {{#if projects.length}}
-  <ul>
     <div class="projects-container">
-
       {{#each projects}}  
-         
-          <div> 
-            {{#if ../session.isLoggedIn}}
-            <div>
-            <form action="/delete-project/{{id}}" method="POST">
-              <button class="icon icon-delete"></button>
-            </form>
-            <a href="/update-project/{{id}}" class="icon icon-edit"></a>
-          </div> 
+          <div>
+              <a href="/projects/{{id}}">
+                {{title}}
+                <img class="projects-image" src={{image}}></img></a> 
+                {{#if ../session.isLoggedIn}}
+              <div class="icons">
+                <form action="/delete-project/{{id}}" method="POST">
+                  <button class="icon icon-delete"></button>
+                </form>
+                <a href="/update-project/{{id}}" class="icon icon-edit"></a>
+              </div> 
             {{/if}}
-          <a href="/projects/{{id}}">
-            {{title}}
-          <img class="projects-image" src={{image}}></img></a> 
-        </div>
+          </div>
       {{/each}}
     </div>
-  </ul>
-
 {{else}}
   <p>Couldn't find any projects</p>
 {{/if}}

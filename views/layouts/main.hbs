@@ -34,12 +34,13 @@
         <a href="/faq" class="text-dark">FAQ</a>
         <a href="/guestbook" class="text-dark">GUESTBOOK</a>
         <a href="/contact" class="text-dark">CONTACT</a>
-        <a href="/log-in" class="text-dark"><i class="icon icon-people"></i></a>
         {{#if session.isLoggedIn}}
-            <p>You are logged in</p> 
-          {{else}}
-            <p>You are not logged in</p>
+          <a href="/log-in" class="text-success"><i class="icon icon-people"></i></a>
+        {{else}}
+            <a href="/log-in" class="text-dark"><i class="icon icon-people"></i></a>
         {{/if}}
+        <a href="/search" class="text-dark"><i class="icon icon-search"></i></a>
+       
   </section>
   <section class="navbar-section">
   </section>

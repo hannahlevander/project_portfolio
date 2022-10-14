@@ -2,7 +2,12 @@
   <p>Failed to log in</p>
 {{/if}}
 
-<form action="/log-in" method="post">
+   {{#if session.isLoggedIn}}
+          <form action="/log-out"  method="POST"><button class"btn btn-primary">Log out</button></form>
+          </form>
+        {{else}}
+
+<form action="/log-in" method="POST">
   <div class="container-log-in">
     <div class="form-group">
       <div class="log-in-text-place-in-center">
@@ -25,7 +30,9 @@
         placeholder="Password"
       />
       <div class="center-and-padding-button">
-        <a href="/log-in/home"><button class="btn btn-primary">Log in</button></a>
+          <a href="/log-in/home"><button class="btn btn-primary">Log in</button></a>
+        {{/if}}
+
       </div>
     </div>
   </div>

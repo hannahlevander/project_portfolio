@@ -1,18 +1,58 @@
-<ul>
-    <p>hello</p>
-    <div class="faqs-container">
-
-      {{#each faqs}}
-        <div>    
-          <form action="/delete-question/{{id}}" method="POST">
-            <button class="icon icon-delete"></button>
-          </form>
-          <i class="icon icon-edit"></i>
-        </div>
-        
-           <li><p>{{question}}</p>
-      </li>  </div>
-      {{/each}}
-
-    </div>
+{{#if errorMessages.length}}
+  <p>Couldn't answer the question because</p>
+  <ul>
+    {{#each errorMessages}}
+      <li>{{this}}</li>
+    {{/each}}
   </ul>
+{{/if}}
+
+{{#if faqs.length}}
+  {{#each faqs}}
+    <div>
+      <form action="/delete-question/{{id}}" method="POST">
+        <button class="icon icon-delete"></button>
+      </form>
+      <p>{{question}}</p>
+    </div>
+    <form action="/answer-question/{{id}}" method="POST">
+      <textarea
+        class="form-input"
+        id="input-example-3"
+        name="question"
+        value="{{question}}"
+        placeholder="Question ..."
+        rows="3"
+      ></textarea>
+      <textarea
+        class="form-input"
+        id="input-example-3"
+        name="answer"
+        value="{{answer}}"
+        placeholder="Answer..."
+        rows="3"
+      ></textarea>
+      <button class="btn btn-primary">Answer</button>
+    </form>
+  {{/each}}
+{{else}}
+  <p>Couldn't find any questions</p>
+
+{{/if}}
+
+{{!-- <div class="faqs-container">
+
+    {{#each faqs}}
+      <div>    
+        <form action="/delete-question/{{id}}" method="POST">
+          <button class="icon icon-delete"></button>
+        </form>
+        <i class="icon icon-edit"></i>
+      </div>
+          <li>
+            <p>{{question}}</p>
+          </li> 
+      </div>
+    {{/each}}
+</div>
+ --}}

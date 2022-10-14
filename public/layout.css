@@ -146,6 +146,7 @@ footer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   padding-bottom: 100px;
+  gap: 10px;
 }
 
 .guestbook-post {
@@ -165,13 +166,27 @@ footer {
   gap: 10px;
 }
 
-.projects-items {
-  outline-style: ridge;
-  display: flex;
-  justify-content: space-between;
-}
-
 .projects-image {
   width: 20vw;
   height: 25vw;
+}
+
+.icons {
+  padding-top: 5px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.button-padding-bottom {
+  padding-bottom: 20px;
+}
+
+.items-in-center-container {
+  display: flex;
+  justify-content: center;
+}
+.form-create-project {
+  width: 600px;
+  align-items: center;
+  text-align: center;
 }
