@@ -1,54 +1,36 @@
 * {
   user-select: none;
 }
-/* header {
-  height: 80px;
-  width: 100%;
-  text-align: center;
-  padding-top: 20px;
-  font-size: 40px;
-} */
 
-/* h1 {
-  text-align: center;
-  padding-top: 70px;
-} */
+/* Main styling*/
 
-/* 
-.container {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  padding-top: 30px;
-} */
-
+/*Margins*/
 main {
   margin: 80px 100px 100px 100px;
 }
 
+h2 {
+  text-align: center;
+}
+
+b {
+  font-size: 1.8em;
+}
+
+/*Header in center*/
 .title-header {
   text-align: center;
   padding-top: 30px;
   user-select: none;
 }
 
+/*Navbar styling for content*/
 .navbar-center {
   justify-content: center;
   gap: 40px;
-  /* padding-right: 20px; */
 }
 
-body {
-  background-color: rgb(255, 255, 255);
-}
-
-/* Contact page */
-#img-Hannah {
-  width: 25vw;
-  text-align: center;
-}
-
-/* Footer */
+/*Footer styling*/
 footer {
   text-align: center;
   height: 200px;
@@ -56,8 +38,53 @@ footer {
   background-color: rgb(189, 189, 189);
 }
 
+/*Padding for content in the footer*/
 .footerContent {
   padding-top: 40px;
+}
+
+/*Icons in Project page when logged in*/
+.icons {
+  padding-top: 5px;
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+/* Place in center of screen*/
+.items-in-center-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* FAQ and Guestbook container */
+.container-guestbook-and-faq {
+  display: grid;
+  padding-top: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  padding-bottom: 50px;
+  gap: 40px;
+}
+
+/* Styling form ...*/
+textarea {
+  padding: 20px;
+}
+
+/* Form group styling */
+.form-group {
+  width: 28vw;
+  text-align: center;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: rgb(228, 228, 228);
+  grid-area: 2 / 3 / 1 / 2;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.center-and-padding-button {
+  padding-top: 20px;
+  text-align: center;
 }
 
 /* Home page */
@@ -75,6 +102,26 @@ footer {
 }
 .img-summer-breakfast {
   width: 25vw;
+}
+
+/* Projects page */
+
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.projects-image {
+  width: 20vw;
+  height: 25vw;
+}
+
+/*Create project form group*/
+.form-create-project {
+  width: 600px;
+  align-items: center;
+  text-align: center;
 }
 
 /* About page */
@@ -102,91 +149,36 @@ footer {
   padding-right: 300px;
 }
 
-/* Log in page */
-.container-log-in {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.form-group {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  padding: 20px;
+/* FAQ page */
+.faq-post {
   border-radius: 5px;
-  background-color: rgb(228, 228, 228);
+  background-color: azure;
 }
 
+.faq-question-style {
+  font-size: 1.8em;
+  text-align: left;
+}
+
+/* Guestbook page */
+.guestbook-post {
+  border-radius: 5px;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+/* Contact page */
+#img-Hannah {
+  width: 25vw;
+  text-align: center;
+}
+
+/* Log in page */
 .log-in-text-place-in-center {
   text-align: center;
   font-size: 20px;
 }
 
-.center-and-padding-button {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  text-align: center;
-}
-
-/* FAQ page */
-.faqs-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr 1fr;
-}
-
-.form-group-faq {
-  grid-column-start: 3;
-  grid-column-end: 4;
-  grid-row-start: 1;
-  grid-row-end: 2;
-}
-
-/* Guestbook page */
-.container-guestbook {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding-bottom: 100px;
-  gap: 10px;
-}
-
-.guestbook-post {
-  background-color: beige;
-  width: 200x;
-}
-
-.guestbook-form-write-area {
-  grid-column-start: 3;
-  grid-column-end: 4;
-}
-
-/* Projects page */
-.projects-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.projects-image {
-  width: 20vw;
-  height: 25vw;
-}
-
-.icons {
-  padding-top: 5px;
-  display: flex;
-  justify-content: space-around;
-}
-
-.button-padding-bottom {
-  padding-bottom: 20px;
-}
-
-.items-in-center-container {
-  display: flex;
-  justify-content: center;
-}
-.form-create-project {
-  width: 600px;
-  align-items: center;
-  text-align: center;
+.log-in-content {
+  text-align: left;
 }

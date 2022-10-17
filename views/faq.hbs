@@ -15,47 +15,43 @@
   </ul>
 {{/if}}
 
-{{#if answeredFaqs.length}}
-    <div class="faqs-container">
-      {{#each answeredFaqs}}
-        <div>
-            {{#if ../session.isLoggedIn}}
-              <form action="/delete-answered-question/{{id}}" method="POST">
-                <button class="icon icon-delete"></button>
-              </form>
-              <i class="icon icon-edit"></i>
-        </div>
-        {{/if}}
-          <p>{{question}}</p>
-          <p>{{answer}}</p>
-      {{/each}}
-    </div>
-{{else}}
-    <p>Couldn't find any questions</p>
-{{/if}}
-
-<div class="guestbook-form-write-area">
-  <form method="POST">
-    <div class="form-group-faq">
-      <div class="form-group">
-      <label class="form-label" for="input-example-3"><h3>DU YOU HAVE ANY QUESTIONS?</h3></label>
+  <div class="container-guestbook-and-faq">
+    <form action="/faq" method="POST">
+        <div class="form-group">
+      <label class="form-label" for="input-example-3"><h4>DU YOU HAVE ANY QUESTIONS?</h4></label>
       {{! <label class="form-label" for="input-example-1"></label> }}
       <textarea
         class="form-input"
         id="input-example-3"
         name="question"
         value=""
-        placeholder="Write question here..."
+        placeholder="Write here..."
         rows="3"
       ></textarea>
       <div class="center-and-padding-button">
         <a href=""><button class="btn btn-primary">Send</button></a>
       </div>
-      </div>
     </div>
   </form>
-  </div>
-</div>
+
+  {{#if answeredFaqs.length}}
+      {{#each answeredFaqs}}
+        <div class="faq-post">
+          <p><b>{{question}}</b></p>
+            <p>{{answer}}</p>
+            {{#if ../session.isLoggedIn}}
+              <form action="/delete-answered-question/{{id}}" method="POST">
+                <button class="icon icon-delete"></button>
+              </form>
+              <i class="icon icon-edit"></i> 
+              </div>
+          {{/if}}
+         
+        {{/each}} 
+    {{else}}
+      <p>Couldn't find any questions</p>
+  {{/if}}
+
 
 {{!-- <form action="/faq" method="post">
   <div>

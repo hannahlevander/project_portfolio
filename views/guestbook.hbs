@@ -1,5 +1,6 @@
 <h2>GUESTBOOK</h2>
 
+
 {{#if errorMessages.length}}
   <p>Couldn't create the post because</p>
   <ul>
@@ -9,42 +10,11 @@
   </ul>
 {{/if}}
 
-<div class="container-guestbook">
-{{#if guestbook.length}}
-      {{#each guestbook}}
-        <div class="guestbook-post">  
-            <p>{{date}}</p>
-            <p>{{name}}</p>
-            <p>{{post}}</p>
-            <p><i>{{answer}}</i></p>
-          {{#if ../session.isLoggedIn}}  
-          <form action="/delete-post/{{id}}" method="POST">
-            <button class="icon icon-delete"></button>
-          </form>
-          <form action="/answer-post/{{id}}" method="POST">
-          <textarea
-        class="form-input"
-        id="input-example-3"
-        name="answer"
-        value="{{answer}}"
-        placeholder="Answer..."
-        rows="3"
-      ></textarea>
-            <button class="btn btn-primary">Answer</button>
-          </form>
-                      {{/if}}
-        </div>
-      {{/each}}
-</div>
-  {{else}}
-    <p>Couldn't find any guestbook posts</p>
-{{/if}}
-
-<div class="guestbook-form-write-area">
+<div class="container-guestbook-and-faq">
+  <div class="form-write-area">
   <form action="/guestbook" method="POST">
-    <div class="form-group-guestbook">
       <div class="form-group">
-      <label class="form-label" for="input-example-3"><h3>WRITE IN MY GUESTBOOK</h3></label>
+      <label class="form-label" for="input-example-3"><h4>WRITE IN MY GUESTBOOK</h4></label>
       {{! <label class="form-label" for="input-example-1"></label> }}
       <input
         class="form-input"
@@ -54,6 +24,7 @@
         value="{{name}}"  
         placeholder="Name"
       />
+      </br>
       <textarea
         class="form-input"
         id="input-example-3"
@@ -66,10 +37,43 @@
         <a href=""><button class="btn btn-primary">Send</button></a>
       </div>
       </div>
-    </div>
   </form>
   </div>
-</div>
+{{#if guestbook.length}}
+      {{#each guestbook}}
+        <div class="guestbook-post">
+          <div class="icons">
+             <p><b>{{name}}</b></p>
+             <p>{{date}}</p>
+              {{#if ../session.isLoggedIn}}
+              <form action="/delete-post/{{id}}" method="POST">
+            <button class="icon icon-delete"></button>
+          </form>
+      {{/if}}
+          </div> 
+            <p>{{post}}</p>
+            <p><i>{{answer}}</i></p>
+          {{#if ../session.isLoggedIn}}
+          <form action="/answer-post/{{id}}" method="POST">
+          <textarea
+        class="form-input"
+        id="input-example-3"
+        name="answer"
+        value="{{answer}}"
+        placeholder="Answer..."
+        rows="3"
+      ></textarea>
+      <div class="icons">
+            <button class="btn btn-primary">Answer</button>
+          </form>
+        </div>
+          {{/if}}
+        </div>
+      {{/each}}
+
+  {{else}}
+    <p>Couldn't find any guestbook posts</p>
+{{/if}}
 {{!-- <form action="/faq" method="post">
   <div>
     Question:<input type="text" name="question" value="{{question}}" />

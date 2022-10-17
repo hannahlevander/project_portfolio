@@ -7,7 +7,7 @@ const expressSession = require("express-session");
 const PROJECT_TITLE_MAX_LENGTH = 10;
 const PROJECT_DESCRIPTION_MAX_LENGTH = 10;
 const FAQ_QUESTION_MAX_LENGTH = 10;
-const GUESTBOOK_POST_MAX_LENGTH = 10;
+const GUESTBOOK_POST_MAX_LENGTH = 100;
 const FAQ_ANSWER_MAX_LENGTH = 10;
 const ADMIN_USERNAME = "Hannah";
 const ADMIN_PASSWORD = "hej";
@@ -281,7 +281,7 @@ app.post("/update-project/:id", function (request, response) {
 //   }
 // });
 
-//faq page with error messages
+//Faq page with all questions
 app.get("/faq/all-questions", function (request, response) {
   const query = `SELECT * FROM faqs`;
 
@@ -329,7 +329,7 @@ app.post("/faq", function (request, response) {
   const errorMessages = [];
 
   if (question == "") {
-    errorMessages.push("You need to write something");
+    errorMessages.push("You need to write something in the question field");
   }
 
   if (FAQ_QUESTION_MAX_LENGTH < question.length) {
@@ -362,7 +362,6 @@ app.post("/faq", function (request, response) {
     db.all(query, function (error, answeredFaqs) {
       const model = {
         errorMessages,
-        question,
         answeredFaqs,
       };
       response.render("faq.hbs", model);
@@ -383,14 +382,15 @@ app.post("/delete-question/:id", function (request, response) {
 
 //Answer question
 app.post("/answer-question/:id", function (request, response) {
-  const id = request.params.id;
+  // const id = request.params.id;
   const question = request.body.question;
   const answer = request.body.answer;
+  let query = ``;
 
   const errorMessages = [];
 
   if (question == "") {
-    errorMessages.push("You need to write something");
+    errorMessages.push("You need to write something in the question field");
   }
 
   if (FAQ_QUESTION_MAX_LENGTH < question.length) {
@@ -414,7 +414,7 @@ app.post("/answer-question/:id", function (request, response) {
   }
 
   if (errorMessages.length == 0) {
-    const query = `INSERT INTO answeredFaqs (question, answer) VALUES (?, ?)`;
+    query = `INSERT INTO answeredFaqs (question, answer) VALUES (?, ?)`;
     const values = [question, answer];
 
     db.run(query, values, function (error) {
@@ -429,11 +429,19 @@ app.post("/answer-question/:id", function (request, response) {
 
         response.render("faq.hbs", model);
       } else {
-        response.redirect("/faq");
+        response.redirect("/faq/all-questions");
       }
     });
   } else {
-    response.render("faq-all-questions.hbs", { errorMessages });
+    query = `SELECT * FROM faqs`;
+    db.all(query, function (error, faqs) {
+      const model = {
+        errorMessages,
+        question,
+        faqs,
+      };
+      response.render("faq-all-questions.hbs", model);
+    });
   }
 });
 
@@ -493,6 +501,7 @@ app.get("/guestbook", function (request, response) {
 app.post("/guestbook", function (request, response) {
   const post = request.body.post;
   const name = request.body.name;
+  let query = ``;
 
   const errorMessages = [];
 
@@ -513,7 +522,7 @@ app.post("/guestbook", function (request, response) {
   }
 
   if (errorMessages.length == 0) {
-    const query = `INSERT INTO guestbook (name, post, date) VALUES (?, ?, date('now'))`;
+    query = `INSERT INTO guestbook (name, post, date) VALUES (?, ?, date('now'))`;
     const values = [name, post];
 
     db.run(query, values, function (error) {
@@ -532,7 +541,14 @@ app.post("/guestbook", function (request, response) {
       }
     });
   } else {
-    response.render("guestbook.hbs", { errorMessages });
+    query = `SELECT * FROM guestbook`;
+    db.all(query, function (error, guestbook) {
+      const model = {
+        errorMessages,
+        guestbook,
+      };
+      response.render("guestbook.hbs", model);
+    });
   }
 });
 
@@ -541,7 +557,7 @@ app.post("/guestbook", function (request, response) {
 app.post("/delete-post/:id", function (request, response) {
   const id = request.params.id;
 
-  const query = `DELETE FROM guestbook WHERE id =?`;
+  query = `DELETE FROM guestbook WHERE id =?`;
 
   db.run(query, id, function (error) {
     response.redirect("/guestbook");
@@ -552,7 +568,7 @@ app.post("/delete-post/:id", function (request, response) {
 app.post("/answer-post/:id", function (request, response) {
   const id = request.params.id;
   const answer = request.body.answer;
-  const query = `UPDATE guestbook SET answer=? WHERE id=?`;
+  query = `UPDATE guestbook SET answer=? WHERE id=?`;
   const values = [answer, id];
 
   db.run(query, values, function (error) {
@@ -595,7 +611,7 @@ app.post("/guestbook", function (request, response) {
   }
 
   if (errorMessages.length == 0) {
-    const query = `INSERT INTO guestbook (name, post, date) VALUES (?, ?, date('now'))`;
+    query = `INSERT INTO guestbook (name, post, date) VALUES (?, ?, date('now'))`;
     const values = [name, post];
 
     db.run(query, values, function (error) {
