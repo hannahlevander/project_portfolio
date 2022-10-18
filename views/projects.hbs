@@ -8,14 +8,14 @@
 {{/if}}
 
 {{#if projects.length}}
-    <div class="projects-container">
-      {{#each projects}}  
-          <div>
-              <a href="/projects/{{id}}">
-                {{title}}
-                <img class="projects-image" src={{image}}></img></a> 
-                {{#if ../session.isLoggedIn}}
-              <div class="icons">
+  <div class="projects-container">
+    {{#each projects}}  
+      <div>
+        <a href="/projects/{{id}}">
+            {{title}}
+            <img class="projects-image" src={{image}}></img></a> 
+            {{#if ../session.isLoggedIn}}
+              <div class="space-around-items">
                 <form action="/delete-project/{{id}}" method="POST">
                   <button class="icon icon-delete"></button>
                 </form>
@@ -24,7 +24,7 @@
             {{/if}}
           </div>
       {{/each}}
-    </div>
+  </div>
 {{else}}
   <p>Couldn't find any projects</p>
 {{/if}}

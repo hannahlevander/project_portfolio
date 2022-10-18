@@ -6,8 +6,9 @@ const expressSession = require("express-session");
 //CAPS = Convention that this const will not change
 const PROJECT_TITLE_MAX_LENGTH = 10;
 const PROJECT_DESCRIPTION_MAX_LENGTH = 10;
-const FAQ_QUESTION_MAX_LENGTH = 10;
+const FAQ_QUESTION_MAX_LENGTH = 30;
 const GUESTBOOK_POST_MAX_LENGTH = 100;
+const GUESTBOOK_POST_ANSWER_MAX_LENGTH = 10;
 const FAQ_ANSWER_MAX_LENGTH = 10;
 const ADMIN_USERNAME = "Hannah";
 const ADMIN_PASSWORD = "hej";
@@ -207,10 +208,10 @@ app.post("/delete-project/:id", function (request, response) {
 //Update project & errormessages
 app.get("/update-project/:id", function (request, response) {
   const id = request.params.id;
-  const model = {
+  /* const model = {
     id,
-  };
-  response.render("update-project.hbs", model);
+  };*/
+  response.render("update-project.hbs" /*, model*/);
 });
 
 app.post("/update-project/:id", function (request, response) {
@@ -407,7 +408,7 @@ app.post("/answer-question/:id", function (request, response) {
 
   if (FAQ_ANSWER_MAX_LENGTH < answer.length) {
     errorMessages.push(
-      "Question can not contain more than " +
+      "Answer can not contain more than " +
         FAQ_ANSWER_MAX_LENGTH +
         " characters"
     );
@@ -429,7 +430,7 @@ app.post("/answer-question/:id", function (request, response) {
 
         response.render("faq.hbs", model);
       } else {
-        response.redirect("/faq/all-questions");
+        response.redirect("/faq");
       }
     });
   } else {
@@ -552,9 +553,9 @@ app.post("/guestbook", function (request, response) {
   }
 });
 
-//Delete question
+//Delete guestbook post
 
-app.post("/delete-post/:id", function (request, response) {
+app.post("/delete-guestbook-post/:id", function (request, response) {
   const id = request.params.id;
 
   query = `DELETE FROM guestbook WHERE id =?`;
@@ -564,8 +565,8 @@ app.post("/delete-post/:id", function (request, response) {
   });
 });
 
-//Answer post
-app.post("/answer-post/:id", function (request, response) {
+//Answer guestbook post add errorMessages
+/*app.post("/answer-guestbook-post/:id", function (request, response) {
   const id = request.params.id;
   const answer = request.body.answer;
   query = `UPDATE guestbook SET answer=? WHERE id=?`;
@@ -586,6 +587,50 @@ app.post("/answer-post/:id", function (request, response) {
       response.redirect("/guestbook");
     }
   });
+});*/
+app.post("/answer-guestbook-post/:id", function (request, response) {
+  const id = request.params.id;
+  const answer = request.body.answer;
+  let query = ``;
+  const errorMessages = [];
+
+  if (GUESTBOOK_POST_ANSWER_MAX_LENGTH < answer.length) {
+    errorMessages.push(
+      "Answer can not contain more than " +
+        GUESTBOOK_POST_ANSWER_MAX_LENGTH +
+        " characters"
+    );
+  }
+
+  if (errorMessages == 0) {
+    query = `UPDATE guestbook SET answer=? WHERE id=?`;
+    const values = [answer, id];
+
+    db.run(query, values, function (error) {
+      if (error) {
+        errorMessages.push("Internal server error");
+
+        const model = {
+          errorMessages,
+          answer,
+          id,
+        };
+
+        response.render("guestbook.hbs", model);
+      } else {
+        response.redirect("/guestbook");
+      }
+    });
+  } else {
+    query = `SELECT * from guestbook`;
+    db.all(query, function (error, guestbook) {
+      const model = {
+        errorMessages,
+        guestbook,
+      };
+      response.render("guestbook.hbs", model);
+    });
+  }
 });
 
 app.post("/guestbook", function (request, response) {
@@ -644,8 +689,8 @@ app.get("/search", function (request, response) {
     const model = {
       values,
     };
+    response.render("search.hbs", model);
   });
-  response.render("search.hbs");
 });
 
 //Get requests to different pages
@@ -684,16 +729,3 @@ app.post("/log-out", function (request, response) {
   response.redirect("/");
 });
 app.listen(8080);
-
-// app.get("/static", (req, res) => {
-//   res.render("static");
-// });
-
-// // Route to display dynamic src images
-// app.get("/dynamic", (req, res) => {
-//   imageList = [];
-//   imageList.push({ src: "icons/flask.png", name: "flask" });
-//   imageList.push({ src: "icons/javascript.png", name: "javascript" });
-//   imageList.push({ src: "icons/react.png", name: "react" });
-//   res.render("dynamic", { imageList: imageList });
-// });

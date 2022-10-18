@@ -44,7 +44,7 @@ footer {
 }
 
 /*Icons in Project page when logged in*/
-.icons {
+.space-around-items {
   padding-top: 5px;
   display: flex;
   justify-content: space-around;
@@ -152,7 +152,7 @@ textarea {
 /* FAQ page */
 .faq-post {
   border-radius: 5px;
-  background-color: azure;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
 }
 
 .faq-question-style {
@@ -171,6 +171,12 @@ textarea {
 #img-Hannah {
   width: 25vw;
   text-align: center;
+}
+
+.contact-text-and-items {
+  padding-top: 50px;
+  text-align: center;
+  padding-bottom: 50px;
 }
 
 /* Log in page */

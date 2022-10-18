@@ -42,11 +42,11 @@
 {{#if guestbook.length}}
       {{#each guestbook}}
         <div class="guestbook-post">
-          <div class="icons">
+          <div class="space-around-items">
              <p><b>{{name}}</b></p>
              <p>{{date}}</p>
               {{#if ../session.isLoggedIn}}
-              <form action="/delete-post/{{id}}" method="POST">
+              <form action="/delete-guestbook-post/{{id}}" method="POST">
             <button class="icon icon-delete"></button>
           </form>
       {{/if}}
@@ -54,7 +54,7 @@
             <p>{{post}}</p>
             <p><i>{{answer}}</i></p>
           {{#if ../session.isLoggedIn}}
-          <form action="/answer-post/{{id}}" method="POST">
+          <form action="/answer-guestbook-post/{{id}}" method="POST">
           <textarea
         class="form-input"
         id="input-example-3"
