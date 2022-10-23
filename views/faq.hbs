@@ -1,72 +1,62 @@
-<h2>FREQUENTLY ASKED QUESTIONS</h2>
+<div class="text-in-center-container">
+  <h2>FREQUENTLY ASKED QUESTIONS</h2>
+  <p>
+    This is the page with the most common questions. If you have any questions,</br>
+    just write them in the form and I will try to answer as soon as possible. When you click the send button<br> 
+    the questions will be stored and displayed when they have been answered.
+  </p>
+</div>
 
 {{#if session.isLoggedIn}}
   <button class="btn btn-primary">
-    <a class="text-light" href="/faq/all-questions">All questions</a>
+    <a class="text-light" href="/faq/allFaqs">All questions</a>
   </button> 
 {{/if}}
 
 {{#if errorMessages.length}}
   <p>Couldn't create the question because</p>
-    <ul>
+  <ul>
     {{#each errorMessages}}
       <li>{{this}}</li>
     {{/each}}
   </ul>
 {{/if}}
 
-  <div class="container-guestbook-and-faq">
-    <form action="/faq" method="POST">
-        <div class="form-group">
-      <label class="form-label" for="input-example-3"><h4>DU YOU HAVE ANY QUESTIONS?</h4></label>
-      {{! <label class="form-label" for="input-example-1"></label> }}
-      <textarea
-        class="form-input"
-        id="input-example-3"
-        name="question"
-        value=""
-        placeholder="Write here..."
-        rows="3"
-      ></textarea>
-      <div class="center-and-padding-button">
-        <a href=""><button class="btn btn-primary">Send</button></a>
-      </div>
+<div class="container-guestbook-and-faq">
+  <form action="/faq" method="POST">
+    <div class="form-group">
+        <label class="form-label" for="input-example-3"><h4>DU YOU HAVE ANY QUESTIONS?</h4></label>
+        {{! <label class="form-label" for="input-example-1"></label> }}
+        <textarea
+          class="form-input"
+          id="input-example-3"
+          name="question"
+          value="{{question}}"
+          placeholder="Write here..."
+          rows="3"
+        ></textarea>
+        <div class="center-and-padding-button">
+          <a href=""><button class="btn btn-primary">Send</button></a>
+        </div>
     </div>
   </form>
 
   {{#if answeredFaqs.length}}
-      {{#each answeredFaqs}}
-        <div class="faq-post">
-          <p><b>{{question}}</b></p>
-            <p>{{answer}}</p>
-            {{#if ../session.isLoggedIn}}
-              <form action="/delete-answered-question/{{id}}" method="POST">
-                <button class="icon icon-delete"></button>
-              </form>
-              <i class="icon icon-edit"></i> 
-              
-          {{/if}}
-         </div>
-        {{/each}} 
-    {{else}}
-      <p>Couldn't find any questions</p>
+    {{#each answeredFaqs}}
+      <div class="faq-post">
+        <p><b>{{question}}</b></p>
+        <p>{{answer}}</p>
+        {{#if ../session.isLoggedIn}}
+          <div class="space-around-items">
+            <form action="/answeredFaq/delete/{{id}}" method="POST">
+              <button class="icon icon-delete"></button>
+            </form>
+            <a href="/answeredFaq/update/{{id}}" class="icon icon-edit"></a>
+          </div>    
+        {{/if}}
+      </div>
+    {{/each}} 
+  {{else}}
+    <p>Couldn't find any questions</p>
   {{/if}}
-
-
-{{!-- <form action="/faq" method="post">
-  <div>
-    Question:<input type="text" name="question" value="{{question}}" />
-  </div>
-  <input type="submit" value="Create question" />
-</form> --}}
-
-{{!-- <form action="/projects/create" method="post">
-  <div>
-    Title:<input type="text" name="title" value="" />
-  </div>
-
-  <div>
-    Description:<input type="text" name="description" value="{{description}}" />
-  </div>
-  <input type="submit" value="Create" />
-</form> --}}
+</div>

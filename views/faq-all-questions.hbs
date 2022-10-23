@@ -10,49 +10,31 @@
 {{#if faqs.length}}
   {{#each faqs}}
     <div>
-      <form action="/delete-question/{{id}}" method="POST">
+      <form action="/faq/delete/{{id}}" method="POST">
         <button class="icon icon-delete"></button>
       </form>
       <p>{{question}}</p>
     </div>
-    <form action="/answer-question/{{id}}" method="POST">
-      <textarea
+    <form action="/faq/answer/{{id}}" method="POST">
+      <input
         class="form-input"
         id="input-example-3"
         name="question"
         value="{{question}}"
         placeholder="Question ..."
         rows="3"
-      ></textarea>
-      <textarea
+      ></input>
+      <input
         class="form-input"
         id="input-example-3"
         name="answer"
         value="{{answer}}"
         placeholder="Answer..."
         rows="3"
-      ></textarea>
+      ></input>
       <button class="btn btn-primary">Answer</button>
     </form>
   {{/each}}
 {{else}}
   <p>Couldn't find any questions</p>
-
 {{/if}}
-
-{{!-- <div class="faqs-container">
-
-    {{#each faqs}}
-      <div>    
-        <form action="/delete-question/{{id}}" method="POST">
-          <button class="icon icon-delete"></button>
-        </form>
-        <i class="icon icon-edit"></i>
-      </div>
-          <li>
-            <p>{{question}}</p>
-          </li> 
-      </div>
-    {{/each}}
-</div>
- --}}

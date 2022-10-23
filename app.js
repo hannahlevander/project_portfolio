@@ -2,18 +2,22 @@ const express = require("express");
 const expressHandlebars = require("express-handlebars");
 const sqlite3 = require("sqlite3");
 const expressSession = require("express-session");
-
-//CAPS = Convention that this const will not change
-const PROJECT_TITLE_MAX_LENGTH = 10;
-const PROJECT_DESCRIPTION_MAX_LENGTH = 10;
-const FAQ_QUESTION_MAX_LENGTH = 30;
-const GUESTBOOK_POST_MAX_LENGTH = 100;
-const GUESTBOOK_POST_ANSWER_MAX_LENGTH = 10;
-const FAQ_ANSWER_MAX_LENGTH = 10;
-const ADMIN_USERNAME = "Hannah";
-const ADMIN_PASSWORD = "hej";
-
+const app = express();
 const db = new sqlite3.Database("hannah-portfolio-database.db");
+
+//Hash password
+const bcryptjs = require("bcryptjs");
+
+const projectTitleMaxLength = 10;
+const projectDescriptionMaxLength = 10;
+const faqQuestionMaxLength = 30;
+const guestbookNameMaxLength = 10;
+const guestbookPostMaxLength = 100;
+const guestbookPostAnswerMaxLength = 10;
+const faqAnswerMaxLength = 10;
+const adminUsername = "Hannah";
+const adminPassword =
+  "$2a$08$cOC3v5zkCLmjzvq04EKSouBtIPGAK6BiQxbR1dk2Sl8RAuo01/QGS";
 
 //Create column in table
 
@@ -44,7 +48,8 @@ db.run(`
 db.run(`
   CREATE TABLE IF NOT EXISTS answeredFaqs (
     id INTEGER PRIMARY KEY,
-    question TEXT
+    question TEXT,
+    answer TEXT
   )
 `);
 
@@ -54,11 +59,10 @@ db.run(`
     id INTEGER PRIMARY KEY,
     name TEXT,
     post TEXT,
-    date TEXT
+    dateCreated INT,
+    answer TEXT
   )
 `);
-
-const app = express();
 
 //Express - Handlebars
 app.engine(
@@ -77,7 +81,7 @@ app.use(
   })
 );
 
-//Express - Session
+//Express - Session - remember that a user has logged in???
 app.use(
   expressSession({
     saveUninitialized: false,
@@ -110,7 +114,6 @@ app.get("/projects", function (request, response) {
 
     const model = {
       errorMessages,
-      // dbErrorOccured: true, //?
       projects,
     };
 
@@ -133,11 +136,9 @@ app.post("/projects/create", function (request, response) {
     errorMessages.push("Title can't be empty");
   }
 
-  if (PROJECT_TITLE_MAX_LENGTH < title.length) {
+  if (projectTitleMaxLength < title.length) {
     errorMessages.push(
-      "Title can not contain more than " +
-        PROJECT_TITLE_MAX_LENGTH +
-        " characters"
+      "Title can not contain more than " + projectTitleMaxLength + " characters"
     );
   }
 
@@ -145,18 +146,17 @@ app.post("/projects/create", function (request, response) {
     errorMessages.push("Description can't be empty");
   }
 
-  if (PROJECT_DESCRIPTION_MAX_LENGTH < description.length) {
+  if (projectDescriptionMaxLength < description.length) {
     errorMessages.push(
       "Description can not contain more than " +
-        PROJECT_DESCRIPTION_MAX_LENGTH +
+        projectDescriptionMaxLength +
         " characters."
     );
   }
 
-  // Do I need this????
-  // if (request.session.isLoggedIn != true) {
-  //   errorMessages.push("Not logged in");
-  // }
+  if (request.session.isLoggedIn != true) {
+    errorMessages.push("Not logged in");
+  }
 
   //Creating project or displaying errormessages
   if (errorMessages.length == 0) {
@@ -166,14 +166,23 @@ app.post("/projects/create", function (request, response) {
     db.run(query, values, function (error) {
       if (error) {
         errorMessages.push("Internal server error");
-
-        response.render("create-project.hbs");
+        const model = {
+          errorMessages,
+          title,
+          description,
+        };
+        response.render("create-project.hbs", model);
       } else {
         response.redirect("/projects");
       }
     });
   } else {
-    response.render("create-project.hbs", { errorMessages });
+    const model = {
+      errorMessages,
+      title,
+      description,
+    };
+    response.render("create-project.hbs", model);
   }
 });
 
@@ -181,7 +190,6 @@ app.post("/projects/create", function (request, response) {
 // GET /projects/2 etc...
 app.get("/projects/:id", function (request, response) {
   const id = request.params.id;
-
   const query = `SELECT * FROM projects WHERE id = ?`;
   const values = [id];
 
@@ -196,25 +204,25 @@ app.get("/projects/:id", function (request, response) {
 
 // Delete project
 // The following post request was created with help from Caroline Frössling
-app.post("/delete-project/:id", function (request, response) {
+app.post("/projects/delete/:id", function (request, response) {
   const id = request.params.id;
   const query = `DELETE FROM projects WHERE id =?`;
 
-  db.run(query, id, function (error) {
-    response.redirect("/projects");
-  });
+  if (request.session.isLoggedIn) {
+    db.run(query, id, function (error) {
+      response.redirect("/projects");
+    });
+  } else {
+    response.redirect("/login");
+  }
 });
 
 //Update project & errormessages
-app.get("/update-project/:id", function (request, response) {
-  const id = request.params.id;
-  /* const model = {
-    id,
-  };*/
-  response.render("update-project.hbs" /*, model*/);
+app.get("/projects/update/:id", function (request, response) {
+  response.render("update-project.hbs");
 });
 
-app.post("/update-project/:id", function (request, response) {
+app.post("/projects/update/:id", function (request, response) {
   const id = request.params.id;
   const title = request.body.title;
   const description = request.body.description;
@@ -223,28 +231,25 @@ app.post("/update-project/:id", function (request, response) {
 
   if (title == "") {
     errorMessages.push("Title can't be empty");
-  } else if (PROJECT_TITLE_MAX_LENGTH < title.length) {
+  } else if (projectTitleMaxLength < title.length) {
     errorMessages.push(
-      "Title can not contain more than " +
-        PROJECT_TITLE_MAX_LENGTH +
-        " characters"
+      "Title can not contain more than " + projectTitleMaxLength + " characters"
     );
   }
 
   if (description == "") {
     errorMessages.push("Description can't be empty");
-  } else if (PROJECT_DESCRIPTION_MAX_LENGTH < description.length) {
+  } else if (projectDescriptionMaxLength < description.length) {
     errorMessages.push(
       "Description can not contain more than " +
-        PROJECT_DESCRIPTION_MAX_LENGTH +
+        projectDescriptionMaxLength +
         " characters."
     );
   }
 
-  //Do I need this????
-  // if (request.session.isLoggedIn != true) {
-  //   errorMessages.push("Not logged in");
-  // }
+  if (request.session.isLoggedIn != true) {
+    errorMessages.push("Not logged in");
+  }
 
   //Updating project or displaying errormessages
   if (errorMessages.length == 0) {
@@ -260,46 +265,19 @@ app.post("/update-project/:id", function (request, response) {
           title,
           description,
         };
-
         response.render("update-project.hbs", model);
       } else {
         response.redirect("/projects");
       }
     });
   } else {
-    response.render("update-project.hbs", { errorMessages });
-  }
-});
-
-//     });
-//   } else {
-//     const model = {
-//       errorMessages,
-//       title,
-//       description,
-//     };
-//     response.render("update-project.hbs", model);
-//   }
-// });
-
-//Faq page with all questions
-app.get("/faq/all-questions", function (request, response) {
-  const query = `SELECT * FROM faqs`;
-
-  db.all(query, function (error, faqs) {
-    const errorMessages = [];
-
-    if (error) {
-      errorMessages.push("Internal server error");
-    }
-
     const model = {
       errorMessages,
-      faqs,
+      title,
+      description,
     };
-
-    response.render("faq-all-questions.hbs", model);
-  });
+    response.render("update-project.hbs", model);
+  }
 });
 
 //Faq page with answered questions
@@ -333,10 +311,10 @@ app.post("/faq", function (request, response) {
     errorMessages.push("You need to write something in the question field");
   }
 
-  if (FAQ_QUESTION_MAX_LENGTH < question.length) {
+  if (faqQuestionMaxLength < question.length) {
     errorMessages.push(
       "Question can not contain more than " +
-        FAQ_QUESTION_MAX_LENGTH +
+        faqQuestionMaxLength +
         " characters"
     );
   }
@@ -372,17 +350,21 @@ app.post("/faq", function (request, response) {
 
 //Delete question
 
-app.post("/delete-question/:id", function (request, response) {
+app.post("/faq/delete/:id", function (request, response) {
   const id = request.params.id;
   const query = `DELETE FROM faqs WHERE id =?`;
 
-  db.run(query, id, function (error) {
-    response.redirect("/faq/all-questions");
-  });
+  if (request.session.isLoggedIn) {
+    db.run(query, id, function (error) {
+      response.redirect("/faq/allFaqs");
+    });
+  } else {
+    response.redirect("/login");
+  }
 });
 
 //Answer question
-app.post("/answer-question/:id", function (request, response) {
+app.post("/faq/answer/:id", function (request, response) {
   // const id = request.params.id;
   const question = request.body.question;
   const answer = request.body.answer;
@@ -394,10 +376,10 @@ app.post("/answer-question/:id", function (request, response) {
     errorMessages.push("You need to write something in the question field");
   }
 
-  if (FAQ_QUESTION_MAX_LENGTH < question.length) {
+  if (faqQuestionMaxLength < question.length) {
     errorMessages.push(
       "Question can not contain more than " +
-        FAQ_QUESTION_MAX_LENGTH +
+        faqQuestionMaxLength +
         " characters"
     );
   }
@@ -406,12 +388,14 @@ app.post("/answer-question/:id", function (request, response) {
     errorMessages.push("Answer can not be empty");
   }
 
-  if (FAQ_ANSWER_MAX_LENGTH < answer.length) {
+  if (faqAnswerMaxLength < answer.length) {
     errorMessages.push(
-      "Answer can not contain more than " +
-        FAQ_ANSWER_MAX_LENGTH +
-        " characters"
+      "Answer can not contain more than " + faqAnswerMaxLength + " characters"
     );
+  }
+
+  if (request.session.isLoggedIn != true) {
+    errorMessages.push("Not logged in");
   }
 
   if (errorMessages.length == 0) {
@@ -427,7 +411,6 @@ app.post("/answer-question/:id", function (request, response) {
           question,
           answer,
         };
-
         response.render("faq.hbs", model);
       } else {
         response.redirect("/faq");
@@ -440,6 +423,7 @@ app.post("/answer-question/:id", function (request, response) {
         errorMessages,
         question,
         faqs,
+        answer,
       };
       response.render("faq-all-questions.hbs", model);
     });
@@ -448,37 +432,105 @@ app.post("/answer-question/:id", function (request, response) {
 
 //Delete answered question
 
-app.post("/delete-answered-question/:id", function (request, response) {
+app.post("/answeredFaq/delete/:id", function (request, response) {
   const id = request.params.id;
   const query = `DELETE FROM answeredFaqs WHERE id =?`;
 
-  db.run(query, id, function (error) {
-    response.redirect("/faq");
-  });
+  if (request.session.isLoggedIn) {
+    db.run(query, id, function (error) {
+      response.redirect("/faq");
+    });
+  } else {
+    response.redirect("/login");
+  }
 });
 
-//faq page with error messages
-app.get("/faq/all-questions", function (request, response) {
-  const query = `SELECT * FROM faqs`;
+//Update answered question & errormessages
+app.get("/answeredFaq/update/:id", function (request, response) {
+  response.render("update-answered-faq.hbs");
+});
 
-  db.all(query, function (error, faqs) {
-    const errorMessages = [];
+app.post("/answeredFaq/update/:id", function (request, response) {
+  const id = request.params.id;
+  const question = request.body.question;
+  const answer = request.body.answer;
 
-    if (error) {
-      errorMessages.push("Internal server error");
-    }
+  const errorMessages = [];
 
+  if (question == "") {
+    errorMessages.push("Question can't be empty");
+  } else if (faqQuestionMaxLength < question.length) {
+    errorMessages.push(
+      "Title can not contain more than " + faqQuestionMaxLength + " characters"
+    );
+  }
+
+  if (answer == "") {
+    errorMessages.push("Answer can't be empty");
+  } else if (faqAnswerMaxLength < answer.length) {
+    errorMessages.push(
+      "Answer can not contain more than " + faqAnswerMaxLength + " characters."
+    );
+  }
+
+  if (request.session.isLoggedIn != true) {
+    errorMessages.push("Not logged in");
+  }
+
+  //Updating project or displaying errormessages
+  if (errorMessages.length == 0) {
+    const query = `UPDATE answeredFaqs SET question= ?, answer= ? WHERE id= ?`;
+    const values = [question, answer, id];
+
+    db.run(query, values, function (error) {
+      if (error) {
+        errorMessages.push("Internal server error");
+
+        const model = {
+          errorMessages,
+          question,
+          answer,
+        };
+        response.render("update-answered-faq.hbs", model);
+      } else {
+        response.redirect("/faq");
+      }
+    });
+  } else {
     const model = {
       errorMessages,
-      faqs,
+      question,
+      answer,
     };
+    response.render("update-answered-faq.hbs", model);
+  }
+});
 
-    response.render("faq-all-questions.hbs", model);
-  });
+//Faq page with all questions
+app.get("/faq/allFaqs", function (request, response) {
+  const query = `SELECT * FROM faqs`;
+
+  if (request.session.isLoggedIn) {
+    db.all(query, function (error, faqs) {
+      const errorMessages = [];
+
+      if (error) {
+        errorMessages.push("Internal server error");
+      }
+
+      const model = {
+        errorMessages,
+        faqs,
+      };
+
+      response.render("faq-all-questions.hbs", model);
+    });
+  } else {
+    response.redirect("/login");
+  }
 });
 
 //Guestbook
-
 app.get("/guestbook", function (request, response) {
   const query = `SELECT * FROM guestbook`;
 
@@ -491,10 +543,8 @@ app.get("/guestbook", function (request, response) {
 
     const model = {
       errorMessages,
-      // dbErrorOccured: true, //?
       guestbook,
     };
-
     response.render("guestbook.hbs", model);
   });
 });
@@ -507,23 +557,27 @@ app.post("/guestbook", function (request, response) {
   const errorMessages = [];
 
   if (post == "") {
-    errorMessages.push("You need to write something");
+    errorMessages.push("You need to write something in the text field");
   }
 
   if (name == "") {
     errorMessages.push("You need to write your name");
   }
 
-  if (GUESTBOOK_POST_MAX_LENGTH < post.length) {
+  if (guestbookPostMaxLength < post.length) {
     errorMessages.push(
-      "Post can not contain more than " +
-        GUESTBOOK_POST_MAX_LENGTH +
-        " characters"
+      "Post can not contain more than " + guestbookPostMaxLength + " characters"
+    );
+  }
+
+  if (guestbookNameMaxLength < name.length) {
+    errorMessages.push(
+      "Name can not contain more than " + guestbookNameMaxLength + " characters"
     );
   }
 
   if (errorMessages.length == 0) {
-    query = `INSERT INTO guestbook (name, post, date) VALUES (?, ?, date('now'))`;
+    query = `INSERT INTO guestbook (name, post, dateCreated, answer) VALUES (?, ?, date('now'), "Waiting for Hannah to answer...")`;
     const values = [name, post];
 
     db.run(query, values, function (error) {
@@ -532,10 +586,10 @@ app.post("/guestbook", function (request, response) {
 
         const model = {
           errorMessages,
-          post,
           name,
+          post,
+          answer,
         };
-
         response.render("guestbook.hbs", model);
       } else {
         response.redirect("/guestbook");
@@ -547,6 +601,8 @@ app.post("/guestbook", function (request, response) {
       const model = {
         errorMessages,
         guestbook,
+        name,
+        post,
       };
       response.render("guestbook.hbs", model);
     });
@@ -555,51 +611,36 @@ app.post("/guestbook", function (request, response) {
 
 //Delete guestbook post
 
-app.post("/delete-guestbook-post/:id", function (request, response) {
+app.post("/guestbook/delete/:id", function (request, response) {
   const id = request.params.id;
-
   query = `DELETE FROM guestbook WHERE id =?`;
 
-  db.run(query, id, function (error) {
-    response.redirect("/guestbook");
-  });
+  if (request.session.isLoggedIn) {
+    db.run(query, id, function (error) {
+      response.redirect("/guestbook");
+    });
+  } else {
+    response.redirect("/login");
+  }
 });
 
-//Answer guestbook post add errorMessages
-/*app.post("/answer-guestbook-post/:id", function (request, response) {
-  const id = request.params.id;
-  const answer = request.body.answer;
-  query = `UPDATE guestbook SET answer=? WHERE id=?`;
-  const values = [answer, id];
-
-  db.run(query, values, function (error) {
-    if (error) {
-      errorMessages.push("Internal server error");
-
-      const model = {
-        errorMessages,
-        answer,
-        id,
-      };
-
-      response.render("guestbook.hbs", model);
-    } else {
-      response.redirect("/guestbook");
-    }
-  });
-});*/
-app.post("/answer-guestbook-post/:id", function (request, response) {
+app.post("/guestbook/answer/:id", function (request, response) {
   const id = request.params.id;
   const answer = request.body.answer;
   let query = ``;
+
   const errorMessages = [];
 
-  if (GUESTBOOK_POST_ANSWER_MAX_LENGTH < answer.length) {
+  if (guestbookPostAnswerMaxLength < answer.length) {
     errorMessages.push(
       "Answer can not contain more than " +
-        GUESTBOOK_POST_ANSWER_MAX_LENGTH +
+        guestbookPostAnswerMaxLength +
         " characters"
     );
+  }
+
+  if (request.session.isLoggedIn != true) {
+    errorMessages.push("Not logged in");
   }
 
   if (errorMessages == 0) {
@@ -612,8 +653,6 @@ app.post("/answer-guestbook-post/:id", function (request, response) {
 
         const model = {
           errorMessages,
-          answer,
-          id,
         };
 
         response.render("guestbook.hbs", model);
@@ -628,69 +667,10 @@ app.post("/answer-guestbook-post/:id", function (request, response) {
         errorMessages,
         guestbook,
       };
+
       response.render("guestbook.hbs", model);
     });
   }
-});
-
-app.post("/guestbook", function (request, response) {
-  const post = request.body.post;
-  const name = request.body.name;
-
-  const errorMessages = [];
-
-  if (post == "") {
-    errorMessages.push("You need to write something");
-  }
-
-  if (name == "") {
-    errorMessages.push("You need to write your name");
-  }
-
-  if (GUESTBOOK_POST_MAX_LENGTH < post.length) {
-    errorMessages.push(
-      "Post can not contain more than " +
-        GUESTBOOK_POST_MAX_LENGTH +
-        " characters"
-    );
-  }
-
-  if (errorMessages.length == 0) {
-    query = `INSERT INTO guestbook (name, post, date) VALUES (?, ?, date('now'))`;
-    const values = [name, post];
-
-    db.run(query, values, function (error) {
-      if (error) {
-        errorMessages.push("Internal server error");
-
-        const model = {
-          errorMessages,
-          post,
-          name,
-        };
-
-        response.render("guestbook.hbs", model);
-      } else {
-        response.redirect("/guestbook");
-      }
-    });
-  } else {
-    response.render("guestbook.hbs", { errorMessages });
-  }
-});
-
-//GET /search?project=WHATEVER_THE_USER_ENTERD
-app.get("/search", function (request, response) {
-  const project = request.body.project; // what the user enters
-  const query = `SELECT * FROM projects WHERE title LIKE '%?%'`;
-  const values = [project];
-
-  db.all(query, values, function (request, repsonse) {
-    const model = {
-      values,
-    };
-    response.render("search.hbs", model);
-  });
 });
 
 //Get requests to different pages
@@ -702,30 +682,44 @@ app.get("/contact", function (request, response) {
   response.render("contact.hbs");
 });
 
-app.get("/log-in", function (request, response) {
-  const username = request.body.username;
-  const password = request.body.password;
+app.get("/login", function (request, response) {
+  // const username = request.body.username;
+  // const password = request.body.password;
   response.render("log-in.hbs");
 });
 
-app.post("/log-in", function (request, response) {
+app.post("/login", function (request, response) {
   const username = request.body.username;
   const password = request.body.password;
 
-  if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD) {
-    request.session.isLoggedIn = true;
-    response.redirect("/");
+  if (username == adminUsername) {
+    bcryptjs.compare(password, adminPassword, function (error, result) {
+      if (result) {
+        request.session.isLoggedIn = true;
+        response.redirect("/");
+      } else {
+        const model = {
+          failedToLogIn: true,
+        };
+        response.render("log-in.hbs", model);
+      }
+    });
   } else {
     const model = {
       failedToLogIn: true,
     };
-
     response.render("log-in.hbs", model);
   }
 });
 
-app.post("/log-out", function (request, response) {
+app.get("/logout", function (request, response) {
+  request.session.isLoggedIn = true;
+  response.render("log-out.hbs");
+});
+
+app.post("/logout", function (request, response) {
   request.session.isLoggedIn = false;
   response.redirect("/");
 });
+
 app.listen(8080);

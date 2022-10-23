@@ -1,0 +1,35 @@
+{{#if errorMessages.length}}
+  <p>Couldn't update the question because</p>
+  <ul>
+    {{#each errorMessages}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+<div class="items-in-center-container">
+  <form method="post">
+    <div class="form-group">
+      <label class="form-label" for="input-example-3"><h3>UPDATE QUESTION</h3></label>
+      <input
+        class="form-input"
+        type="text"
+        id="input-example-1"
+        name="question"
+        value="{{question}}"  
+        placeholder="Question"
+      /></br>
+      <input
+        class="form-input"
+        id="input-example-3"
+        name="answer"
+        value="{{answer}}"
+        placeholder="Update answer..."
+        rows="3"
+      ></input>
+      <div class="center-and-padding-button">
+        <a href=""><button class="btn btn-primary">Update</button></a>
+      </div>
+    </div>
+  </form>
+</div>

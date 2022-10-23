@@ -1,5 +1,11 @@
 <h2>GUESTBOOK</h2>
 
+<div class="text-in-center-container">
+  <p>
+    This is my guestbook and I would love if you wrote something in it! Feel free to write feedback regarding<br>
+    my website and projects. You can of course write if you have any questions as well.
+  </p>
+</div>
 
 {{#if errorMessages.length}}
   <p>Couldn't create the post because</p>
@@ -12,86 +18,62 @@
 
 <div class="container-guestbook-and-faq">
   <div class="form-write-area">
-  <form action="/guestbook" method="POST">
+    <form action="/guestbook" method="POST">
       <div class="form-group">
-      <label class="form-label" for="input-example-3"><h4>WRITE IN MY GUESTBOOK</h4></label>
-      {{! <label class="form-label" for="input-example-1"></label> }}
-      <input
-        class="form-input"
-        type="text"
-        id="input-example-1"
-        name="name"
-        value="{{name}}"  
-        placeholder="Name"
-      />
-      </br>
-      <textarea
-        class="form-input"
-        id="input-example-3"
-        name="post"
-        value="{{post}}"
-        placeholder="Write here..."
-        rows="3"
-      ></textarea>
-      <div class="center-and-padding-button">
-        <a href=""><button class="btn btn-primary">Send</button></a>
+        <label class="form-label" for="input-example-3"><h4>WRITE IN MY GUESTBOOK</h4></label>
+        <input
+          class="form-input"
+          type="text"
+          id="input-example-1"
+          name="name"
+          value="{{name}}"  
+          placeholder="Name"
+        />
+        </br>
+        <input
+          class="form-input"
+          id="input-example-3"
+          name="post"
+          value="{{post}}"
+          placeholder="Write here..."
+          rows="3"
+        ></input>
+        <div class="center-and-padding-button">
+          <a href=""><button class="btn btn-primary">Send</button></a>
+        </div>
       </div>
-      </div>
-  </form>
+    </form>
   </div>
-{{#if guestbook.length}}
+    {{#if guestbook.length}}
       {{#each guestbook}}
         <div class="guestbook-post">
           <div class="space-around-items">
              <p><b>{{name}}</b></p>
-             <p>{{date}}</p>
+             <p>{{dateCreated}}</p>
               {{#if ../session.isLoggedIn}}
-              <form action="/delete-guestbook-post/{{id}}" method="POST">
-            <button class="icon icon-delete"></button>
-          </form>
-      {{/if}}
+                <form action="/guestbook/delete/{{id}}" method="POST">
+                  <button class="icon icon-delete"></button>
+                </form>
+              {{/if}}
           </div> 
-            <p>{{post}}</p>
-            <p><i>{{answer}}</i></p>
+          <p>{{post}}</p>
+          <p><i>{{answer}}</i></p>
           {{#if ../session.isLoggedIn}}
-          <form action="/answer-guestbook-post/{{id}}" method="POST">
-          <textarea
-        class="form-input"
-        id="input-example-3"
-        name="answer"
-        value="{{answer}}"
-        placeholder="Answer..."
-        rows="3"
-      ></textarea>
-      <div class="icons">
-            <button class="btn btn-primary">Answer</button>
-          </form>
-        </div>
+            <form action="/guestbook/answer/{{id}}" method="POST">
+              <input
+                class="form-input"
+                id="input-example-3"
+                name="answer"
+                value=""
+                placeholder="Answer..."
+                rows="3"
+              ></input>
+              <button class="btn btn-primary">Answer</button>
+            </form> 
           {{/if}}
         </div>
-      {{/each}}
-
-  {{else}}
-    <p>Couldn't find any guestbook posts</p>
-{{/if}}
-{{!-- <form action="/faq" method="post">
-  <div>
-    Question:<input type="text" name="question" value="{{question}}" />
-  </div>
-  <input type="submit" value="Create question" />
-</form> --}}
-
-{{! <div class="panel">
-  <div class="panel-header">
-    <div class="panel-title">Comments</div>
-  </div>
-  <div class="panel-nav">
-    <!-- navigation components: tabs, breadcrumbs or pagination -->
-  </div>
-  <div class="panel-body">
-    <!-- contents -->
-  </div>
-  <div class="panel-footer">
-    <!-- buttons or inputs -->
-  </div>
-</div> }}
+      {{/each}}   
+      {{else}}
+        <p>Couldn't find any guestbook posts - be the first one to write in my guestbook!</p>
+    {{/if}}
+</div>

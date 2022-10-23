@@ -57,13 +57,9 @@ footer {
   justify-content: center;
 }
 
-/* FAQ and Guestbook container */
-.container-guestbook-and-faq {
-  display: grid;
-  padding-top: 20px;
-  grid-template-columns: repeat(3, 1fr);
-  padding-bottom: 50px;
-  gap: 40px;
+/* Place text in center of screen*/
+.text-in-center-container {
+  text-align: center;
 }
 
 /* Styling form ...*/
@@ -83,7 +79,7 @@ textarea {
 }
 
 .center-and-padding-button {
-  padding-top: 20px;
+  padding-top: 10px;
   text-align: center;
 }
 
@@ -91,6 +87,7 @@ textarea {
 .container-home-page {
   display: grid;
   grid-template-columns: auto 2fr 2fr;
+  padding-top: 80px;
 }
 
 .illustration-title-and-description {
@@ -105,11 +102,19 @@ textarea {
 }
 
 /* Projects page */
+.projects-title {
+  text-align: center;
+}
 
+.title-for-each-project {
+  font-size: 1.5em;
+  text-align: center;
+}
 .projects-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
+  padding-top: 50px;
 }
 
 .projects-image {
@@ -122,6 +127,11 @@ textarea {
   width: 600px;
   align-items: center;
   text-align: center;
+}
+
+/* Specific project page */
+.project-page-title {
+  padding-bottom: 20px;
 }
 
 /* About page */
@@ -147,6 +157,15 @@ textarea {
   grid-column-end: 3;
   padding-left: 20px;
   padding-right: 300px;
+}
+/* FAQ and Guestbook container */
+.container-guestbook-and-faq {
+  display: grid;
+  padding-top: 0px;
+  grid-template-columns: repeat(3, 1fr);
+  padding-bottom: 50px;
+  padding-top: 50px;
+  gap: 40px;
 }
 
 /* FAQ page */
@@ -174,7 +193,7 @@ textarea {
 }
 
 .contact-text-and-items {
-  padding-top: 50px;
+  padding-top: 20px;
   text-align: center;
   padding-bottom: 50px;
 }

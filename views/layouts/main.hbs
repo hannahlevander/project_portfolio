@@ -20,14 +20,13 @@
   </head>
   <body>
 
-<div class="title-header">
-  <h2>HANNAH LEVANDER</h2>
-</div>
-  
-<header class="navbar">
-  <section class="navbar-section">
-  </section>
-  <section class="navbar-center">
+    <div class="title-header">
+      <h2>HANNAH LEVANDER</h2>
+    </div>
+
+    <header class="navbar">
+      <section class="navbar-section"></section>
+      <section class="navbar-center">
         <a href="/" class="text-dark">HOME</a>
         <a href="/projects" class="text-dark">PROJECTS</a>
         <a href="/about" class="text-dark">ABOUT</a>
@@ -35,54 +34,26 @@
         <a href="/guestbook" class="text-dark">GUESTBOOK</a>
         <a href="/contact" class="text-dark">CONTACT</a>
         {{#if session.isLoggedIn}}
-          <a href="/log-in" class="text-success"><i class="icon icon-people"></i></a>
+          <a href="/logout" class="text-success"><i
+              class="icon icon-people"
+            ></i></a>
         {{else}}
-            <a href="/log-in" class="text-dark"><i class="icon icon-people"></i></a>
+          <a href="/login" class="text-dark"><i
+              class="icon icon-people"
+            ></i></a>
         {{/if}}
-        <a href="/search" class="text-dark"><i class="icon icon-search"></i></a>
-       
-  </section>
-  <section class="navbar-section">
-  </section>
-</header>
-    
-{{!-- 
-    <header class="navbar">
-      <a href="/" class="text-dark"><h2>HANNAH LEVANDER</h2></a>
-      <section class="navbar-section">
-        <a href="/" class="text-dark">HOME</a>
-        <a href="/projects" class="text-dark">PROJECTS</a>
-        <a href="/about" class="text-dark">ABOUT</a>
-        <a href="/faq" class="text-dark">FAQ</a>
-        <a href="/guestbook" class="text-dark">GUESTBOOK</a>
-        <a href="/contact" class="text-dark">CONTACT</a>
-        <a href="log-in" class="text-dark"><i class="icon icon-people"></i></a>
       </section>
-    </header> --}}
+      <section class="navbar-section"></section>
+    </header>
 
-    {{! <header>
-      HANNAH LEVANDER
-    </header> }}
-
-    {{! <div class="container"
-    <nav>
-      <a href="/" class = "text-dark" >HOME</a>
-      <a href="/projects" class = "text-dark" >PROJECTS</a>
-      <a href="/about" class = "text-dark" >ABOUT</a>
-      <a href="/faq" class = "text-dark" >FAQ</a>
-      <a href="/guestbook" class = "text-dark" >GUESTBOOK</a>
-      <a href="/contact" class = "text-dark" >CONTACT</a>
-    </nav>
-</div> }}
-  <main>
-    {{{body}}}
-  </main>
+    <main>
+      {{{body}}}
+    </main>
 
     <footer>
       <div class="footerContent">
         <i class="icon icon-location"></i>
-        Jönköping </br> 
-        Copyright Hannah Levander 2022
+        Jönköping<br />Copyright Hannah Levander 2022
       </div>
     </footer>
 

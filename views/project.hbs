@@ -1,7 +1,10 @@
-<h2>Project</h2>
+<div class="project-page-title">
+  <h3>Project</h3>
+</div>
+
 {{#if project}}
-  <p>Name: {{project.title}}</p>
-  <p>Description: {{project.description}}</p>
+  <p><strong>Title:</strong> {{project.title}}</p>
+  <p><strong>Description:</strong> {{project.description}}</p>
 {{else}}
-  <p>That project doesn't exist</p>
+  <p>The project you are currently looking for does not exist</p>
 {{/if}}

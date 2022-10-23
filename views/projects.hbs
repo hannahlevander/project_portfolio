@@ -1,6 +1,16 @@
-<div class="project-title"><h2>PROJECTS</h2></div>
+<div class="projects-title">
+  <h3>PROJECTS</h3>
+</div>
+
+<div class="text-in-center-container">
+  <p>
+    Here you can find some of my projects that I have been working on during my courses in the program New Media Design<br>
+    at Jönköpings University. By clicking on a specific project you can read more about it!
+  </p>
+</div>
+
 {{#if session.isLoggedIn}}
-  <div class="button-padding-bottom ">
+  <div class="button-padding-bottom">
     <button class="btn btn-primary">
       <a class="text-light" href="/projects/create">Create project</a>
     </button>
@@ -12,18 +22,21 @@
     {{#each projects}}  
       <div>
         <a href="/projects/{{id}}">
+          <div class= "title-for-each-project text-dark">
             {{title}}
-            <img class="projects-image" src={{image}}></img></a> 
-            {{#if ../session.isLoggedIn}}
-              <div class="space-around-items">
-                <form action="/delete-project/{{id}}" method="POST">
-                  <button class="icon icon-delete"></button>
-                </form>
-                <a href="/update-project/{{id}}" class="icon icon-edit"></a>
-              </div> 
-            {{/if}}
           </div>
-      {{/each}}
+          <img class="projects-image" src="/images/project-cover-image.jpg"></img>
+        </a> 
+        {{#if ../session.isLoggedIn}}
+          <div class="space-around-items">
+            <form action="/projects/delete/{{id}}" method="POST">
+              <button class="icon icon-delete"></button>
+            </form>
+            <a href="/projects/update/{{id}}" class="icon icon-edit"></a>
+          </div> 
+          {{/if}}
+      </div>
+    {{/each}}
   </div>
 {{else}}
   <p>Couldn't find any projects</p>
