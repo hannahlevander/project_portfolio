@@ -8,10 +8,10 @@ const db = new sqlite3.Database("hannah-portfolio-database.db");
 //Hash password
 const bcryptjs = require("bcryptjs");
 
-const projectTitleMaxLength = 30;
+const projectTitleMaxLength = 50;
 const projectDescriptionMaxLength = 200;
 const faqQuestionMaxLength = 100;
-const guestbookNameMaxLength = 30;
+const guestbookNameMaxLength = 50;
 const guestbookPostMaxLength = 150;
 const guestbookPostAnswerMaxLength = 150;
 const faqAnswerMaxLength = 150;
